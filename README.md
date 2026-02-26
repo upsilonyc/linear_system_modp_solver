@@ -1,0 +1,74 @@
+# Linear System Solver Modulo a Prime
+
+This repository contains a small solver for systems of linear equations
+with coefficients in \(\mathbb{Z}_p\), where \(p\) is a prime.  It
+supports both a terminal interface and a minimal web-based calculator
+suitable for hosting on GitHub Pages.
+
+## Features
+
+* core algorithm in `solver/alg.py`; no dependencies other than
+  the standard library
+* command-line tool (`python -m solver` or via `solver.cli`) that can
+  read a matrix interactively, from a file, or from a pipe
+* static web page (`docs/index.html`) with a JavaScript port of the
+  algorithm – perfect for `.github.io` pages
+
+## Installation
+
+You can use the package directly from the source directory:
+
+```sh
+python3 -m venv .venv        # optional virtual env
+source .venv/bin/activate
+pip install -e .              # later, if packaging added
+```
+
+
+## Command‑line usage
+
+```sh
+# interactive mode
+python -m solver -p 7 -i
+
+# read matrix from file
+python -m solver -p 13 -f matrix.txt
+
+# read from standard input
+cat matrix.txt | python -m solver -p 5
+```
+
+The matrix file should contain one row per equation; each row must
+have the coefficients followed by the constant term, separated by
+spaces.
+
+### Example
+
+```
+$ cat matrix.txt
+1 1 2
+1 6 0
+
+$ python -m solver -p 7 -f matrix.txt
+solution: [2, 0]
+```
+
+## Web interface
+
+Open `docs/index.html` in a browser or host the contents of the
+`docs/` directory using GitHub Pages.  You can point the Pages source to
+`/docs` via the repository settings and the page will be available at
+`https://<your-username>.github.io/<repo-name>/`.
+
+The page allows you to paste a matrix and a prime modulus, then click
+"Solve" to see the result.
+
+## Development
+
+* tests can be added under `tests/` using ``pytest``
+* the algorithm is written to keep mutation local; helper functions
+  are pure and easily ported to other languages
+
+---
+
+Feel free to extend the UI or add more command‑line options!

@@ -1,0 +1,2 @@
+[console_scripts]
+lin-sys-mod = solver.cli:main

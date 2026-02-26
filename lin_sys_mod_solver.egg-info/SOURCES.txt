@@ -1,0 +1,12 @@
+README.md
+pyproject.toml
+lin_sys_mod_solver.egg-info/PKG-INFO
+lin_sys_mod_solver.egg-info/SOURCES.txt
+lin_sys_mod_solver.egg-info/dependency_links.txt
+lin_sys_mod_solver.egg-info/entry_points.txt
+lin_sys_mod_solver.egg-info/top_level.txt
+solver/__init__.py
+solver/__main__.py
+solver/alg.py
+solver/cli.py
+tests/test_alg.py

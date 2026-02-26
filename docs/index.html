@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Modular Linear System Solver</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 2rem auto; }
+        textarea { width: 100%; font-family: monospace; height: 150px; }
+        input[type=number] { width: 5rem; }
+        .result { margin-top: 1rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Modular Linear System Solver</h1>
+    <p>Enter the augmented matrix (one equation per line, coefficients and constant
+    separated by spaces) and a prime modulus.  For example:</p>
+    <pre>1 0 0 1
+0 1 1 2</pre>
+
+    <label for="matrix">Augmented matrix:</label><br>
+    <textarea id="matrix" placeholder="1 0 0 1\n0 1 1 2"></textarea>
+    <br>
+    <label for="prime">Prime modulus:</label>
+    <input id="prime" type="number" value="7" min="2">
+    <button id="solve">Solve</button>
+
+    <p class="result" id="output"></p>
+
+    <script>
+    function modularInverse(a, p) {
+        // using Fermat's little theorem; assume p is prime
+        return modPow(a, p - 2, p);
+    }
+
+    function modPow(base, exp, mod) {
+        base = ((base % mod) + mod) % mod;
+        let result = 1n;
+        base = BigInt(base);
+        exp = BigInt(exp);
+        mod = BigInt(mod);
+        while (exp > 0) {
+            if (exp % 2n === 1n) result = (result * base) % mod;
+            base = (base * base) % mod;
+            exp = exp / 2n;
+        }
+        return Number(result);
+    }
+
+    function solveModularSystem(matrix, p) {
+        const m = matrix.length;
+        if (m === 0) return [];
+        const n = matrix[0].length - 1;
+        if (m !== n) {
+            throw new Error('system must be square');
+        }
+        // deep copy
+        const mat = matrix.map(r => r.slice());
+        for (let i = 0; i < n; i++) {
+            let pivot = i;
+            while (pivot < n && (mat[pivot][i] % p) === 0) pivot++;
+            if (pivot === n) throw new Error('no unique solution');
+            [mat[i], mat[pivot]] = [mat[pivot], mat[i]];
+            const inv = modularInverse(mat[i][i], p);
+            for (let k = 0; k < n+1; k++) {
+                mat[i][k] = ((mat[i][k] * inv) % p + p) % p;
+            }
+            for (let j = 0; j < m; j++) {
+                if (j === i) continue;
+                const factor = mat[j][i];
+                for (let k = 0; k < n+1; k++) {
+                    mat[j][k] = ((mat[j][k] - factor * mat[i][k]) % p + p) % p;
+                }
+            }
+        }
+        return mat.map(r => r[n]);
+    }
+
+    document.getElementById('solve').addEventListener('click', () => {
+        const out = document.getElementById('output');
+        try {
+            const p = parseInt(document.getElementById('prime').value, 10);
+            const lines = document.getElementById('matrix').value.trim().split('\n');
+            const matrix = lines.map(l => l.trim().split(/\s+/).map(x => parseInt(x, 10)));
+            const sol = solveModularSystem(matrix, p);
+            out.textContent = 'solution: [' + sol.join(', ') + ']';
+        } catch (e) {
+            out.textContent = 'error: ' + e.message;
+        }
+    });
+    </script>
+</body>
+</html>
