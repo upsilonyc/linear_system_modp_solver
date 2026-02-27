@@ -21,7 +21,7 @@ You can use the package directly from the source directory:
 ```sh
 python3 -m venv .venv        # optional virtual env
 source .venv/bin/activate
-pip install -e .              # later, if packaging added
+pip install lin-sys-mod-solver
 ```
 
 
