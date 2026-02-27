@@ -55,6 +55,8 @@ solution: [2, 0]
 
 ## Web interface
 
+Currently, the web interface is available [here](upsilonyc.github.io/linear_system_modp_solver/). 
+
 Open `docs/index.html` in a browser or host the contents of the
 `docs/` directory using GitHub Pages.  You can point the Pages source to
 `/docs` via the repository settings and the page will be available at
